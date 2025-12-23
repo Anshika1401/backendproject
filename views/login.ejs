@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- Page Title -->
+  <title>Login - Path2Tech</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap + Icons + Fonts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+  /* === Theme Variables (Dark & Subtle) === */
+  :root {
+    --primary-charcoal: #1A1F27;
+    --primary-dark: #12151B;
+    --accent-color: #00BFA5;      /* Calm teal accent */
+    --success-color: #6FA800;     /* Muted green */
+    --text-color: #E5E7EB;        /* Light gray text */
+    --text-muted: #7B8A99;        /* Muted gray */
+    --text-dark: #C9CCD1;         /* Slightly softer white */
+  }
+
+  /* === Body & Layout === */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--primary-dark);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+  /* === Registration Card === */
+  .auth-card {
+    background: var(--primary-charcoal);
+    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4); /* subtle shadow only */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .auth-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* subtle hover */
+  }
+
+  /* === Page Heading === */
+  h2.text-neon {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--accent-color);
+    text-shadow: none; /* remove glow */
+  }
+
+  /* === Form Inputs === */
+  .form-control {
+    background-color: var(--primary-dark);
+    color: var(--text-color);
+    border: 1px solid #232B35; /* darker subtle border */
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    padding: 0.8rem 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .form-control::placeholder {
+    color: rgba(229, 231, 235, 0.4);
+  }
+
+  .form-control:focus {
+    background-color: var(--primary-dark);
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: none; /* remove glow */
+    outline: none;
+  }
+
+  select.form-control {
+    appearance: none;
+    background-color: var(--primary-dark);
+    color: var(--text-color);
+  }
+
+  select.form-control option {
+    background-color: var(--primary-charcoal);
+    color: var(--text-color);
+  }
+
+  /* === Submit Button === */
+  .btn-auth {
+    width: 100%;
+    border-radius: 8px;
+    padding: 0.85rem;
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: none; /* remove glow */
+  }
+
+  .btn-auth:hover {
+    background-color: #00987F; /* slightly darker teal */
+    border-color: #00987F;
+    transform: translateY(-1px);
+  }
+
+  .btn-auth:active {
+    background-color: #007F66;
+    transform: translateY(0);
+  }
+
+  /* === Footer === */
+  .auth-footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .auth-footer a {
+    color: var(--success-color);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .auth-footer a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+
+</head>
+
+<body>
+
+  <!-- Login Form Container -->
+  <div class="auth-card">
+
+    <!-- Login Heading -->
+    <h2 class="text-neon">
+      <i class="bi bi-box-arrow-in-right me-2"></i> Login
+    </h2> 
+
+    <!-- Login Form -->
+    <form action="/login" method="POST">
+      <input type="email" name="email" class="form-control" placeholder="Email" required>
+      <input type="password" name="password" class="form-control" placeholder="Password" required>
+      <button type="submit" class="btn-auth">Login</button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="auth-footer">
+      <p>Don't have an account? <a href="/register">Register</a></p>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<%
+    title = "Admin - Users"
+    currentPath = "/admin/users"
+%>
+
+<style>
+:root {
+    --primary-charcoal: #161b22;   /* Darker background */
+    --primary-dark: #1c222a;       /* Table/card background */
+    --accent-neon: #00c8b0;        /* Softer neon for headers and highlights */
+    --text-color: #d0d4da;
+    --pass-color: #a3ff00;         /* Lime for admin roles */
+    --fail-color: #ff4d6d;         /* Soft red for delete buttons */
+}
+
+.admin-header {
+    color: var(--accent-neon);
+    text-shadow: 0 0 8px rgba(0, 200, 176, 0.4);
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* TABLE STYLING */
+.table-console {
+    background-color: var(--primary-dark); 
+    color: var(--text-color);
+    border: 1px solid #11171e; 
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.table-console thead th {
+    background-color: var(--primary-charcoal);
+    color: var(--accent-neon);
+    border-bottom: 2px solid var(--accent-neon); 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-console tbody td {
+    border-top: 1px dashed #11171e; 
+    border-bottom: none;
+    padding: 10px 8px;
+}
+
+.table-console tbody tr:nth-of-type(odd) {
+    background-color: var(--primary-dark);
+}
+
+.table-console tbody tr:nth-of-type(even) {
+    background-color: var(--primary-charcoal);
+}
+
+.table-console tbody tr:hover {
+    background-color: #233038 !important;
+}
+
+/* Action Button Styling */
+.table-console .btn-danger {
+    background-color: var(--fail-color);
+    border-color: var(--fail-color);
+    box-shadow: 0 0 8px rgba(255, 77, 109, 0.5);
+    transition: all 0.2s;
+}
+.table-console .btn-danger:hover {
+    background-color: #E3005A;
+    border-color: #E3005A;
+    transform: scale(1.05);
+}
+
+/* Status Indicators */
+.status-admin {
+    color: var(--pass-color);
+    font-weight: 700;
+}
+
+.status-user {
+    color: var(--accent-neon);
+    font-weight: 600;
+}
+</style>
+
+<div class="container my-5">
+    <h2 class="admin-header"><i class="bi bi-people-fill me-2"></i> Registered Users</h2>
+
+    <div class="table-responsive">
+        <table class="table table-console">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if (users.length > 0) { %>
+                    <% users.forEach(u => { %>
+                        <tr>
+                            <td><%= u.id %></td>
+                            <td><%= u.username %></td>
+                            <td><%= u.email %></td>
+                            <td class="<%= u.role && u.role.toLowerCase() === 'admin' ? 'status-admin' : 'status-user' %>">
+                                <%= u.role %>
+                            </td>
+                            <td><%= new Date(u.created_at).toLocaleString() %></td>
+                            <td>
+                                <form action="/admin/users/delete/<%= u.id %>" method="POST"
+                                      onsubmit="return confirm('Delete this user? All progress will also be removed.');">
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6" class="text-center" style="color: var(--accent-neon);">
+                            <i class="bi bi-info-circle me-2"></i> No users found.
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

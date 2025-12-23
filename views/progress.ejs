@@ -1,0 +1,314 @@
+<% title = "My Progress - Path2Tech" %>
+
+<!-- Progress Dashboard Page -->
+
+<div class="container my-5">
+  <!-- Redis Cache Indicator -->
+<% if (source === "redis") { %>
+  <div class="alert alert-success text-center fw-bold shadow-sm">
+    ⚡ Data loaded from Redis Cache (High Performance)
+  </div>
+<% } else { %>
+  <div class="alert alert-primary text-center fw-bold shadow-sm">
+    📀 Data loaded from Database
+  </div>
+<% } %>
+
+
+  <!-- Dashboard Heading -->
+  <h2 class="text-center fw-bold mb-5" style="color: var(--primary-charcoal);">
+    <i class="bi bi-speedometer2 me-2"></i> Your Personalized Progress Dashboard
+  </h2>
+
+  <!-- Summary Stats Cards -->
+  <div class="row mb-5 text-center">
+
+    <%
+      // Calculate performance summary numbers
+      const totalSubjects = summary.length;
+      const avgPercentage = summary.length 
+        ? (summary.reduce((acc, s) => acc + Number(s.percentage), 0) / totalSubjects).toFixed(2)
+        : 0;
+      const bestScore = summary.length
+        ? Math.max(...summary.map(s => Number(s.percentage)))
+        : 0;
+      const totalAttempts = summary.reduce((acc, s) => acc + s.attempts, 0);
+      const masteryCount = summary.filter(s => Number(s.percentage) >= 80).length;
+    %>
+
+    <!-- Avg Accuracy -->
+    <div class="col-md-3 mb-4">
+      <div class="card chart-card p-3 shadow-lg bg-success" style="color: var(--text-dark) !important;">
+        <i class="bi bi-graph-up-arrow fs-3 mb-2"></i>
+        <h6 class="text-uppercase opacity-75">Avg Accuracy</h6>
+        <p class="fs-2 fw-bold"><%= avgPercentage %>%</p>
+      </div>
+    </div>
+
+    <!-- Best Score -->
+    <div class="col-md-3 mb-4">
+      <div class="card chart-card p-3 shadow-lg bg-warning" style="color: var(--text-dark) !important;">
+        <i class="bi bi-award fs-3 mb-2"></i>
+        <h6 class="text-uppercase opacity-75">Best Score Achieved</h6>
+        <p class="fs-2 fw-bold"><%= bestScore %>%</p>
+      </div>
+    </div>
+
+    <!-- Total Attempts -->
+    <div class="col-md-3 mb-4">
+      <div class="card chart-card p-3 shadow-lg bg-info" style="color: var(--text-dark) !important;">
+        <i class="bi bi-journal-check fs-3 mb-2"></i>
+        <h6 class="text-uppercase opacity-75">Total Attempts</h6>
+        <p class="fs-2 fw-bold"><%= totalAttempts %></p>
+      </div>
+    </div>
+
+    <!-- Topics Mastered -->
+    <div class="col-md-3 mb-4">
+      <div class="card chart-card text-white p-3 shadow-lg bg-primary">
+        <i class="bi bi-patch-check fs-3 mb-2"></i>
+        <h6 class="text-uppercase opacity-75">Topics Mastered</h6>
+        <p class="fs-2 fw-bold"><%= masteryCount %> / <%= totalSubjects %></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <!-- Radar Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4 h-100 shadow">
+        <h5 class="fw-bold mb-3 text-center" style="color: var(--text-dark);">🧠 Skill Mastery vs. Platform Average</h5>
+        <canvas id="radarChart" style="max-height: 400px;"></canvas>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4 h-100 shadow">
+        <h5 class="fw-bold mb-3 text-center" style="color: var(--primary-charcoal);">
+          <i class="bi bi-trophy-fill me-2" style="color: var(--accent-neon);"></i> Global Leaders
+        </h5>
+
+        <div class="table-responsive">
+          <table class="table table-striped shadow-sm align-middle">
+            <thead class="table-primary">
+              <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% leaderboard.forEach((user, index) => { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= user.username %></td>
+                  <td class="fw-bold"><%= Number(user.percentage).toFixed(2) %>%</td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+        <button class="btn btn-sm btn-primary mt-3">View Full Leaderboard</button>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="my-5" style="border-top: 2px solid #ddd;">
+
+  <!-- Performance Summary Table -->
+  <h4 class="fw-bold mb-3" style="color: var(--primary-charcoal);">
+    <i class="bi bi-list-check me-2"></i> Performance Summary
+  </h4>
+
+  <div class="table-responsive mb-5">
+    <table class="table table-bordered shadow-sm align-middle table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th>Subject</th>
+          <th>Type</th>
+          <th>Difficulty</th>
+          <th>Attempts</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% summary.forEach(s => { 
+            const percentage = Number(s.percentage);
+            const statusClass = percentage < 50 ? 'table-danger' : 
+                               (percentage < 75 ? 'table-warning' : 'table-success');
+        %>
+          <tr class="<%= statusClass %>">
+            <td><%= s.subject %></td>
+            <td><%= s.type %></td>
+            <td><%= s.difficulty %></td>
+            <td><%= s.attempts %></td>
+            <td class="fw-bold"><%= percentage.toFixed(2) %>%</td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Attempt History Table -->
+  <h4 class="fw-bold mb-3" style="color: var(--primary-charcoal);">
+    <i class="bi bi-clock-history me-2"></i> Attempt History
+  </h4>
+
+  <div class="table-responsive mb-5">
+    <table class="table table-striped shadow-sm align-middle">
+      <thead class="table-secondary">
+        <tr>
+          <th>Date</th>
+          <th>Subject</th>
+          <th>Difficulty</th>
+          <th>Score</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% attempts.forEach(a => { %>
+          <tr>
+            <td><%= new Date(a.created_at).toLocaleString() %></td>
+            <td><%= a.subject %></td>
+            <td><%= a.difficulty %></td>
+            <td><%= a.score %>/<%= a.total %></td>
+            <td class="fw-bold"><%= Number(a.percentage).toFixed(2) %>%</td>
+          </tr>
+        <% }) %>
+      </tbody>
+
+    </table>
+  </div>
+
+  <div class="row">
+
+    <!-- Line Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4 h-100 shadow">
+        <h5 class="fw-bold mb-3 text-center" style="color: var(--text-dark);">📈 Performance Line Chart</h5>
+        <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="col-lg-6 mb-4">
+      <div class="card p-4 h-100 shadow">
+        <h5 class="fw-bold mb-3 text-center" style="color: var(--text-dark);">📊 Subject Distribution</h5>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Inject dynamic data from backend
+  const summaryData = JSON.parse('<%- JSON.stringify(summary) %>');
+  const attemptsData = JSON.parse('<%- JSON.stringify(attempts) %>');
+  const skillData = JSON.parse('<%- JSON.stringify(skillData) %>');
+
+  // Line Chart Setup
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: summaryData.map(s => `${s.subject} (${s.difficulty})`),
+      datasets: [{
+        label: 'Performance %',
+        data: summaryData.map(s => Number(s.percentage)),
+        borderColor: '#00FFD1',
+        backgroundColor: 'rgba(0, 255, 209, 0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { stepSize: 10 } },
+        x: { ticks: { autoSkip: false } }
+      }
+    }
+  });
+
+  // Pie Chart Setup
+  new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+      labels: summaryData.map(s => s.subject),
+      datasets: [{
+        data: summaryData.map(s => Number(s.percentage)),
+        backgroundColor: [
+          '#00FFD1', '#A3FF00', '#FF6B6B',
+          '#2D3A47', '#FFD100', '#70FF00'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { 
+          position: 'bottom',
+          labels: { boxWidth: 20 }
+        }
+      }
+    }
+  });
+
+  // Radar Chart Setup
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: skillData.map(d => d.subject),
+      datasets: [
+        {
+          label: 'Your Mastery',
+          data: skillData.map(d => d.user_score),
+          backgroundColor: 'rgba(0, 255, 209, 0.4)',
+          borderColor: '#00FFD1',
+          pointBackgroundColor: '#00FFD1'
+        },
+        {
+          label: 'Platform Average',
+          data: skillData.map(d => d.avg_score),
+          backgroundColor: 'rgba(163, 255, 0, 0.4)',
+          borderColor: '#A3FF00',
+          pointBackgroundColor: '#A3FF00'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        r: { suggestedMin: 0, suggestedMax: 100, ticks: { stepSize: 20 } }
+      }
+    }
+  });
+</script>
+
+<!-- Local Page Styles -->
+<style>
+  .chart-card {
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  .chart-card h6 {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+  .chart-card p {
+    margin-top: -5px;
+  }
+</style>

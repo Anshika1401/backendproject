@@ -1,0 +1,16 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - heading " Login" [level=2] [ref=e4]:
+    - generic [ref=e5]: 
+    - text: Login
+  - generic [ref=e6]:
+    - textbox "Email" [ref=e7]
+    - textbox "Password" [ref=e8]
+    - button "Login" [ref=e9] [cursor=pointer]
+  - paragraph [ref=e11]:
+    - text: Don't have an account?
+    - link "Register" [ref=e12] [cursor=pointer]:
+      - /url: /register
+```

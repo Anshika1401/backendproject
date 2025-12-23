@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title><%= title || "Path2Tech" %></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+/* 🎨 UNIQUE CHARCOAL & NEON THEME */
+:root {
+--primary-charcoal: #2D3A47; /* Deep Charcoal Blue */
+--primary-dark: #1F2733; /* Near Black */
+--accent-neon: #00FFD1; /* Electric Teal/Cyan */
+--success-color: #A3FF00; /* Electric Lime Green */
+--danger-color: #FF0066; /* Intense Digital Red for Admin Delete/Logout */
+--background-light: #F4F7F9;
+--text-color: #E5E7EB; /* Light Grey for dark backgrounds */
+--text-dark: #1F2937; /* Dark Charcoal for light backgrounds */
+}
+
+body {
+font-family: 'Poppins', sans-serif;
+background-color: var(--background-light);
+color: var(--text-dark); /* Default text color on light background */
+line-height: 1.6;
+}
+
+/* ------------------------------------------- */
+/* --- STANDARD USER NAV STYLES (Existing) --- */
+/* ------------------------------------------- */
+
+.navbar-user {
+background: linear-gradient(90deg, var(--primary-charcoal), var(--primary-dark));
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
+}
+ .navbar-user .navbar-brand {
+ font-weight: 800;
+letter-spacing: 1.5px;
+font-size: 1.8rem;
+color: var(--accent-neon) !important; /* Neon Logo */
+}
+ .navbar-user .nav-link {
+ font-weight: 600;
+color: var(--text-color) !important;
+ transition: background-color 0.3s, color 0.3s, transform 0.2s;
+ padding: 8px 15px !important; 
+ border-radius: 8px;
+ }
+ .navbar-user .nav-link:hover, .navbar-user .nav-link.active {
+background-color: rgba(0, 255, 209, 0.15); /* Subtle Neon glow */
+ color: var(--accent-neon) !important;
+ transform: translateY(-2px);
+}
+ 
+/* Gamification Bar - Highlighting points with Neon */
+.gamification-bar {
+display: flex;
+align-items: center;
+color: var(--text-color);
+ margin-left: 25px;
+ border-left: 2px solid rgba(255, 255, 255, 0.2);
+ padding-left: 20px;
+ font-size: 0.95rem;
+}
+.gamification-bar i {
+font-size: 1.1rem;
+  margin-right: 5px;
+ }
+ .points {
+ color: var(--accent-neon); /* Neon for Points */
+font-weight: 700;
+margin-right: 15px;
+}
+.rank {
+   color: var(--text-color);
+ font-weight: 600;
+}
+
+/* ------------------------------------------- */
+/* --- ADMIN NAV STYLES (NEW) --- */
+/* ------------------------------------------- */
+.navbar-admin {
+  background-color: var(--primary-dark);
+  border-bottom: 3px solid var(--accent-neon);
+  box-shadow: 0 4px 15px rgba(0, 255, 209, 0.3);
+}
+.navbar-admin .navbar-brand {
+  color: var(--accent-neon) !important;
+  font-weight: 700;
+  text-shadow: 0 0 5px rgba(0, 255, 209, 0.5);
+}
+.navbar-admin .nav-link {
+  color: var(--text-color) !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: 4px;
+  padding: 0.5rem 1rem !important;
+}
+.navbar-admin .nav-link:hover {
+  color: var(--accent-neon) !important;
+  background-color: var(--primary-charcoal);
+}
+.navbar-admin .nav-link.active {
+  color: var(--text-dark) !important;
+  background-color: var(--accent-neon);
+  font-weight: 700;
+}
+
+
+/* Card - Modern Look */
+.card {
+border-radius: 16px;
+border: none;
+box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+transform: translateY(-4px);
+box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+ /* Chart Card Gradients */
+.chart-card {
+ text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+.bg-success {
+ background: linear-gradient(45deg, var(--success-color), #70FF00) !important;
+color: var(--text-dark) !important;
+ }
+.bg-primary { /* General Primary/Avg Score */
+background: linear-gradient(45deg, var(--primary-charcoal), var(--primary-dark)) !important;
+ color: var(--text-color) !important;
+ }
+.bg-warning { /* Best Score */
+background: linear-gradient(45deg, var(--accent-neon), #6DFFF0) !important;
+ color: var(--text-dark) !important; /* Dark text on bright neon */
+}
+ .bg-info { /* Total Attempts/Mastered */
+ background: linear-gradient(45deg, #FFD100, #FFEA00) !important; /* Yellow/Gold Accent */
+ color: var(--text-dark) !important;
+} 
+/* Buttons */
+ .btn {
+border-radius: 10px;
+ font-weight: 600;
+ text-transform: uppercase;
+}
+btn-primary {
+background-color: var(--primary-charcoal);
+ border-color: var(--primary-charcoal);
+ color: var(--text-color);
+ }
+.btn-primary:hover {
+ background-color: var(--primary-dark);
+border-color: var(--primary-dark);
+color: var(--accent-neon);
+transform: scale(1.02);
+}
+ .btn-danger {
+background-color: var(--danger-color);
+border-color: var(--danger-color);
+color: #fff;
+ }
+ .btn-danger:hover {
+ background-color: #E64A4A;
+ border-color: #E64A4A;
+}
+
+ /* Footer */
+footer {
+ background: var(--primary-dark);
+ color: var(--text-color);
+ padding: 20px 0;
+ margin-top: 60px;
+box-shadow: 0 -3px 10px rgba(0,0,0,0.2);
+}
+
+ /* Table styles - Using standard values instead of CSS variables to avoid parser conflicts */
+.table-primary {
+ background-color: #2D3A47 !important; /* Charcoal background */
+ color: var(--accent-neon) !important;
+}
+ .table-secondary {
+   background-color: #E5E7EB !important;
+}
+.table-success { background-color: #D1FFAD !important; } 
+ .table-warning { background-color: #D6FFF8 !important; } /* Light Neon */
+ .table-danger { background-color: #FFE5E5 !important; }
+.text-success { color: var(--success-color) !important; font-weight: 700; }
+ .text-danger { color: var(--danger-color) !important; font-weight: 700; }
+ .text-primary { color: var(--primary-charcoal) !important; }
+ </style>
+</head>
+<body>
+
+<%
+  // EJS logic block is outside of <style> to prevent CSS parser errors.
+  // Set up variables defensively
+  const userExists = typeof user !== 'undefined' && user;
+  const isAdmin = userExists && user.role === 'admin';
+  const current = typeof currentPath !== 'undefined' ? currentPath : '';
+%>
+
+  <nav class="navbar navbar-expand-lg navbar-dark mb-4 <%= isAdmin ? 'navbar-admin' : 'navbar-user' %>">
+    <div class="container">
+      
+  <% if (isAdmin) { %>
+      <a class="navbar-brand" href="/admin/dashboard">
+          <i class="bi bi-shield-lock-fill me-2"></i> ADMIN CONSOLE
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAdmin">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAdmin">
+          <ul class="navbar-nav ms-auto align-items-center">
+              <li class="nav-item">
+                  <a class="nav-link <%= current.startsWith('/admin/dashboard') && !current.includes('/users') && !current.includes('/userProgress') ? 'active' : '' %>" href="/admin/dashboard">
+                      <i class="bi bi-house-door-fill me-1"></i> Home (Questions)
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link <%= current.includes('/admin/users') ? 'active' : '' %>" href="/admin/users">
+                      <i class="bi bi-people-fill me-1"></i> Users
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link <%= current.includes('/admin/userProgress') ? 'active' : '' %>" href="/admin/userProgress">
+                      <i class="bi bi-graph-up-arrow me-1"></i> User Progress
+                  </a>
+              </li>
+              
+              <li class="nav-item ms-3">
+                  <form action="/logout" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-danger btn-sm px-3 py-1">
+                          <i class="bi bi-box-arrow-right me-1"></i> LOGOUT
+                      </button>
+                  </form>
+              </li>
+          </ul>
+      </div>
+      
+  <% } else { %>
+      <a class="navbar-brand" href="/">Path2Tech</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavUser">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavUser">
+          <ul class="navbar-nav ms-auto align-items-center">
+              
+              <li class="nav-item"><a class="nav-link <%= current === '/' ? 'active' : '' %>" href="/">Home</a></li>
+              <li class="nav-item"><a class="nav-link <%= current.includes('/modules/Java') ? 'active' : '' %>" href="/modules/Java/MCQ/Easy">Java</a></li>
+              <li class="nav-item"><a class="nav-link <%= current.includes('/modules/Cloud%20Computing') ? 'active' : '' %>" href="/modules/Cloud%20Computing/MCQ/Easy">Cloud</a></li>
+              <li class="nav-item"><a class="nav-link <%= current.includes('/modules/System%20Design') ? 'active' : '' %>" href="/modules/System%20Design/MCQ/Easy">System Design</a></a></li>
+              <li class="nav-item"><a class="nav-link <%= current.includes('/progress') ? 'active' : '' %>" href="/progress">My Progress</a></li>
+              
+              <% if (userExists) { %>
+                  <li class="nav-item gamification-bar">
+                      <i class="bi bi-star-fill me-1" style="color: var(--accent-neon);"></i> 
+                      <span class="points me-3"><%= user.points || 0 %> pts</span>
+                      <i class="bi bi-trophy-fill me-1" style="color: var(--success-color);"></i>
+                      <span class="rank">#<%= user.rank || 'N/A' %></span>
+                  </li>
+                  
+                  <li class="nav-item ms-3">
+                      <form action="/logout" method="POST" class="d-inline">
+                          <button type="submit" class="btn btn-danger btn-sm px-3 py-1">LOGOUT</button>
+                      </form>
+                  </li>
+              <% } else { %>
+                  <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+              <% } %>
+          </ul>
+      </div>
+  <% } %>
+</div>
+</nav>
+
+<div class="container my-4">
+<%- body %>
+</div>
+
+<footer class="text-center">
+ <p>&copy; <%= new Date().getFullYear() %> Path2Tech. Fueling your success.</p>
+ </footer>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

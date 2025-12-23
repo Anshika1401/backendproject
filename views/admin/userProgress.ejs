@@ -1,0 +1,145 @@
+<%
+    title = "Admin - User Progress"
+    currentPath = "/admin/userProgress"
+%>
+
+<style>
+/* Reused Admin styles for consistency */
+:root {
+    --primary-charcoal: #161b22;   /* Darker background */
+    --primary-dark: #1c222a;       /* Table/card background */
+    --accent-neon: #00c8b0;        /* Softer neon */
+    --text-color: #d0d4da;
+    --pass-color: #a3ff00;         /* Lime for Pass/Complete */
+    --fail-color: #ff4d6d;         /* Soft Red for Fail/Incomplete */
+}
+
+.admin-header {
+    color: var(--accent-neon);
+    text-shadow: 0 0 8px rgba(0, 200, 176, 0.4);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* TABLE STYLING */
+.table-console {
+    background-color: var(--primary-dark);
+    color: var(--text-color);
+    border: 1px solid #11171e;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.table-console thead th {
+    background-color: var(--primary-charcoal);
+    color: var(--accent-neon);
+    border-bottom: 2px solid var(--accent-neon);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-console tbody td {
+    border-top: 1px dashed #11171e;
+    border-bottom: none;
+    padding: 10px 8px;
+}
+
+.table-console tbody tr:nth-of-type(odd) {
+    background-color: var(--primary-dark);
+}
+
+.table-console tbody tr:nth-of-type(even) {
+    background-color: var(--primary-charcoal);
+}
+
+.table-console tbody tr:hover {
+    background-color: #233038 !important;
+}
+
+.status-pass {
+    color: var(--pass-color);
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(163, 255, 0, 0.5);
+}
+
+.status-fail {
+    color: var(--fail-color);
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(255, 77, 109, 0.5);
+}
+</style>
+
+<div class="container my-3">
+    <h2 class="admin-header">
+        <i class="bi bi-graph-up-arrow me-2"></i> User Progress Tracking
+    </h2>
+
+    <div class="table-responsive">
+        <table class="table table-console">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Type</th>
+                    <th>Difficulty</th>
+                    <th>Score (%)</th>
+                    <th>Status</th>
+                    <th>Last Attempt</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if (progressRecords.length > 0) { %>
+                    <% progressRecords.forEach(record => {
+                        const total = record.total || 1;
+                        const scorePercent = ((record.score / total) * 100).toFixed(1);
+                        const isPass = scorePercent >= 70;
+
+                        let attemptDate = 'N/A';
+                        if (record.created_at) {
+                            attemptDate = new Date(record.created_at).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                    %>
+
+                        <tr>
+                            <td><%= record.user_id %></td>
+                            <td><%= record.username %></td>
+                            <td><%= record.email %></td>
+                            <td><%= record.subject %></td>
+                            <td><%= record.type %></td>
+                            <td><%= record.difficulty %></td>
+                            <td><%= scorePercent %>%</td>
+
+                            <td class="<%= isPass ? 'status-pass' : 'status-fail' %>">
+                                <i class="bi <%= isPass ? 'bi-check-circle-fill' : 'bi-x-circle-fill' %> me-1"></i>
+                                <%= isPass ? 'Complete' : 'Incomplete' %>
+                            </td>
+
+                            <td><%= attemptDate %></td>
+                        </tr>
+
+                    <% }) %>
+
+                <% } else { %>
+                    <tr>
+                        <td colspan="9" class="text-center" style="color: var(--accent-neon);">
+                            <i class="bi bi-info-circle me-2"></i> No progress records found.
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

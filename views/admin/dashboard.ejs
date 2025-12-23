@@ -1,0 +1,202 @@
+<% title = "Admin Dashboard - Path2Tech" %>
+
+<style>
+    :root {
+        --primary-charcoal: #161b22;       /* Darker background */
+        --primary-dark: #1c222a;           /* Slightly lighter card background */
+        --accent-neon: #00c8b0;            /* Softer neon */
+        --edit-color: #e0b500;             /* Soft yellow for edit */
+        --delete-color: #d9365f;           /* Soft red for delete */
+        --text-color: #d0d4da;             /* Light gray for text */
+        --text-dark: #000000;
+    }
+
+    .admin-header {
+        color: var(--accent-neon);
+        letter-spacing: 1px;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .btn-add-neon {
+        background-color: var(--accent-neon);
+        border: 2px solid var(--accent-neon);
+        color: var(--text-dark);
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 0 10px rgba(0, 200, 176, 0.5);
+        border-radius: 5px;
+    }
+
+    .btn-add-neon:hover {
+        box-shadow: 0 0 18px var(--accent-neon);
+        transform: scale(1.02);
+    }
+
+    .table-console {
+        background-color: var(--primary-dark);
+        color: var(--text-color);
+        border: 1px solid #11171e;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+        font-family: Arial, sans-serif;
+    }
+
+    .table-console thead th {
+        background-color: var(--primary-charcoal);
+        color: var(--accent-neon);
+        border-bottom: 2px solid var(--accent-neon);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .table-console tbody td {
+        border-top: 1px solid #11171e;
+        border-bottom: none;
+        padding: 10px 8px;
+    }
+
+    .table-console tbody tr:nth-of-type(odd) {
+        background-color: var(--primary-dark);
+    }
+
+    .table-console tbody tr:nth-of-type(even) {
+        background-color: var(--primary-charcoal);
+    }
+
+    .table-console tbody tr:hover {
+        background-color: #222831 !important;
+    }
+
+    .btn-action-base {
+        padding: 4px 7px;
+        border-radius: 4px;
+        transition: box-shadow 0.2s, transform 0.2s;
+        box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    }
+
+    .btn-edit-neon {
+        background-color: var(--edit-color);
+        border: 1px solid var(--edit-color);
+        color: var(--text-dark);
+    }
+
+    .btn-edit-neon:hover {
+        box-shadow: 0 0 8px var(--edit-color);
+        transform: scale(1.03);
+    }
+
+    .btn-delete-neon {
+        background-color: var(--delete-color);
+        border: 1px solid var(--delete-color);
+        color: var(--text-color);
+    }
+
+    .btn-delete-neon:hover {
+        box-shadow: 0 0 8px var(--delete-color);
+        transform: scale(1.03);
+    }
+
+    /* Responsive tweak for mobile tables */
+    @media (max-width: 768px) {
+        .table-console thead {
+            display: none;
+        }
+        .table-console tbody td {
+            display: block;
+            width: 100%;
+            border: none;
+            padding: 8px 5px;
+            text-align: right;
+            position: relative;
+        }
+        .table-console tbody td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
+            font-weight: 600;
+            color: var(--accent-neon);
+            text-transform: uppercase;
+        }
+    }
+</style>
+
+<div class="container my-5">
+    <h2 class="admin-header">
+        <i class="bi bi-clipboard-data me-2"></i> 
+        Question Management Console
+    </h2>
+
+    <a href="/admin/add" class="btn btn-add-neon mb-4">
+        <i class="bi bi-plus-circle me-2"></i> 
+        Deploy New Question
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-console">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th style="width: 15%;">Subject</th>
+                    <th>Type</th>
+                    <th>Difficulty</th>
+                    <th>Question</th>
+                    <th style="width: 100px;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if (questions && questions.length > 0) { %>
+                    <% questions.forEach(q => { %>
+                        <tr>
+                            <td data-label="ID"><%= q.id %></td>
+                            <td data-label="Subject"><%= q.subject %></td>
+                            <td data-label="Type"><%= q.type %></td>
+                            <td data-label="Difficulty"><%= q.difficulty %></td>
+
+                            <td data-label="Question">
+                                <%= q.question.length > 60 
+                                    ? q.question.substring(0, 60) + '...' 
+                                    : q.question 
+                                %>
+                            </td>
+
+                            <td data-label="Actions">
+                                <a href="/admin/edit/<%= q.id %>" 
+                                   class="btn btn-action-base btn-edit-neon btn-sm me-2">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <form action="/admin/delete/<%= q.id %>" method="POST" style="display:inline" class="delete-form">
+                                    <button class="btn btn-action-base btn-delete-neon btn-sm">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <h5 class="text-light">No questions found.</h5>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Add confirmation before deleting
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const confirmed = confirm("⚠️ Are you sure you want to delete this question?");
+            if (!confirmed) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>

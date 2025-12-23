@@ -1,0 +1,114 @@
+<div class="container my-5">
+    <div class="card p-4 mb-4 shadow-sm" style="border-radius: 12px;">
+        <h3 class="fw-bold mb-3" style="color: var(--primary-dark);"><i class="bi bi-code-slash me-2"></i> <%= problem.title %></h3>
+        <p class="text-muted small">Difficulty: <span class="badge bg-secondary"><%= problem.difficulty %></span></p>
+        <div class="problem-statement">
+            <% if (typeof problem !== 'undefined' && problem.description) { %>
+                <p><%= problem.description %></p>
+            <% } else { %>
+                <p>Implement a function to reverse a linked list. (Problem statement placeholder)</p>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="card p-4 shadow-lg mb-4" style="border-radius: 12px; background-color: #273444;"> <h5 class="text-white mb-3"><i class="bi bi-pencil-square me-2"></i> Code Editor</h5>
+        <textarea id="codeEditor" rows="15" class="form-control coding-editor"><%= code %></textarea>
+        
+        <div class="d-flex justify-content-end mt-3">
+            <button id="runBtn" class="btn btn-warning fw-bold me-3">
+                <i class="bi bi-play-fill me-1"></i> Run Code
+            </button>
+            <button id="submitBtn" class="btn btn-success fw-bold">
+                <i class="bi bi-cloud-upload-fill me-1"></i> Final Submit
+            </button>
+        </div>
+    </div>
+
+    <div class="card p-4 shadow-lg" style="border-radius: 12px; background-color: #fff;">
+        <h5 style="color: var(--primary-dark);"><i class="bi bi-terminal-fill me-2"></i> Execution Output</h5>
+        <div id="output" class="mt-3 output-area"></div>
+    </div>
+</div>
+
+<script>
+document.getElementById('runBtn').addEventListener('click', async () => {
+    document.getElementById('output').innerHTML = '<div class="text-info"><i class="bi bi-hourglass-split me-2"></i> Running tests...</div>';
+    
+    const code = document.getElementById('codeEditor').value;
+    const response = await fetch(`/coding/run/<%= problem.id %>`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+    });
+    const data = await response.json();
+    
+    // Styling the output data for clarity
+    document.getElementById('output').innerHTML = `
+        <div class="output-block">
+            <strong class="text-muted">Sample Input:</strong>
+            <pre class="bg-light p-2 rounded">${data.input || 'N/A'}</pre>
+        </div>
+        <div class="output-block">
+            <strong class="text-muted">Expected Output:</strong>
+            <pre class="bg-light p-2 rounded text-success">${data.expected || 'N/A'}</pre>
+        </div>
+        <div class="output-block">
+            <strong style="color: var(--primary-dark);">Your Output:</strong>
+            <pre class="bg-light p-2 rounded text-primary">${data.actual || 'N/A'}</pre>
+        </div>
+        ${data.error ? `<div class="alert alert-danger mt-3"><strong><i class="bi bi-exclamation-triangle-fill me-1"></i> Runtime Error:</strong><pre style="color:inherit">${data.error}</pre></div>` : ''}
+    `;
+});
+
+document.getElementById('submitBtn').addEventListener('click', async () => {
+    const code = document.getElementById('codeEditor').value;
+    // NOTE: The FormData usage in your original EJS was incorrect for JSON submit. 
+    // I am retaining the correct JSON submission based on your fetch method, but simplifying the initial message.
+    
+    document.getElementById('output').innerHTML = '<div class="text-primary"><i class="bi bi-cloud-upload-fill me-2"></i> Submitting code for official evaluation...</div>';
+    
+    // Simulating the submission process for the current phase where the compiler is external/manual
+    const response = await fetch(`/coding/submit/<%= problem.id %>`, {
+        method: 'POST',
+        body: JSON.stringify({ code }),
+        headers: { 'Content-Type': 'application/json' }
+    });
+
+    const html = await response.text();
+    document.getElementById('output').innerHTML = html; // Assume backend returns status HTML
+});
+</script>
+
+<style>
+/* Local Styles for Coding Editor/Output */
+.coding-editor {
+    background-color: #1f2733 !important; /* Slightly lighter than dark card background */
+    color: #f0f8ff !important; /* Off-white text */
+    font-family: 'Consolas', 'Courier New', monospace !important;
+    font-size: 0.95rem;
+    border: none !important;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+    resize: none; /* Prevent manual resizing */
+}
+
+/* Output Area Styling */
+.output-area pre {
+    margin-top: 5px;
+    padding: 10px;
+    border-left: 3px solid var(--primary-color);
+    white-space: pre-wrap; /* Ensure text wraps */
+    word-break: break-all;
+    font-size: 0.9rem;
+}
+.output-area .text-success { color: var(--success-color) !important; }
+.output-area .text-danger { color: var(--danger-color) !important; }
+
+.problem-statement {
+    padding: 15px;
+    background-color: #f4f8fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+}
+</style>

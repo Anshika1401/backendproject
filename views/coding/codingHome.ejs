@@ -1,0 +1,171 @@
+<% title = "Coding Practice - Challenges" %>
+
+<style>
+    :root {
+        --primary-charcoal: #1C232B;
+        --primary-dark: #12181F;
+        --accent-neon: #00FFD1;
+        --text-color: #F5F7FA;
+        --text-dark: #000000;
+        /* Difficulty Colors */
+        --easy-color: #A3FF00; /* Lime Green */
+        --medium-color: #FFC300; /* Gold/Yellow */
+        --hard-color: #FF0066; /* Intense Red */
+    }
+
+    .container {
+        color: var(--text-color);
+    }
+
+    /* --- Page Header --- */
+    .coding-header {
+        color: var(--accent-neon);
+        text-shadow: 0 0 15px rgba(0, 255, 209, 0.7);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    /* --- Difficulty Tabs --- */
+    .nav-pills { 
+        border-bottom: 2px solid var(--primary-charcoal); /* Subtle separator */
+    }
+    .nav-pills .nav-link { 
+        color: var(--accent-neon); 
+        background-color: var(--primary-dark);
+        border: 1px solid var(--primary-charcoal);
+        margin: 0 5px; /* Spacing out the tabs */
+        border-radius: 4px;
+        font-weight: 500;
+        text-transform: uppercase;
+        transition: all 0.3s;
+    }
+    .nav-pills .nav-link:hover {
+        background-color: var(--primary-charcoal);
+        color: var(--text-color);
+    }
+    .nav-pills .nav-link.active { 
+        color: var(--text-dark) !important;
+        background-color: var(--accent-neon); 
+        border-color: var(--accent-neon) !important; 
+        font-weight: 700;
+        box-shadow: 0 0 15px var(--accent-neon);
+        transform: translateY(-2px); 
+    }
+
+    /* --- Problem List Group --- */
+    .list-group-item {
+        background-color: var(--primary-dark);
+        color: var(--text-color);
+        border: 1px solid var(--primary-charcoal);
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+    .list-group-item:hover {
+        background-color: var(--primary-charcoal);
+        border-color: var(--accent-neon);
+        box-shadow: 0 0 5px rgba(0, 255, 209, 0.3);
+    }
+
+    /* Problem Title */
+    .list-group-item .fw-bold {
+        color: var(--text-color);
+    }
+    
+    /* Status Badges */
+    .badge-easy {
+        background-color: var(--easy-color) !important;
+        color: var(--text-dark) !important;
+        font-weight: 700;
+    }
+    .badge-medium {
+        background-color: var(--medium-color) !important;
+        color: var(--text-dark) !important;
+        font-weight: 700;
+    }
+    .badge-hard {
+        background-color: var(--hard-color) !important;
+        color: var(--text-color) !important;
+        font-weight: 700;
+        text-shadow: 0 0 5px var(--hard-color);
+    }
+
+    /* Empty State */
+    .empty-state {
+        color: var(--accent-neon) !important;
+        border: 1px dashed var(--accent-neon) !important;
+        background-color: var(--primary-dark) !important;
+        border-radius: 8px;
+        padding: 50px;
+    }
+</style>
+
+<div class="container my-5">
+    <h2 class="fw-bold text-center coding-header mb-5">
+        <i class="bi bi-laptop-code me-2"></i> Coding Practice - Java Challenges
+    </h2>
+
+    <ul class="nav nav-pills nav-fill mb-5" id="difficultyTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="easy-tab" data-bs-toggle="tab" data-bs-target="#easy" type="button" role="tab" aria-controls="easy" aria-selected="true">Easy</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="medium-tab" data-bs-toggle="tab" data-bs-target="#medium" type="button" role="tab" aria-controls="medium" aria-selected="false">Medium</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="hard-tab" data-bs-toggle="tab" data-bs-target="#hard" type="button" role="tab" aria-controls="hard" aria-selected="false">Hard</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="difficultyTabsContent">
+        
+        <div class="tab-pane fade show active" id="easy" role="tabpanel" aria-labelledby="easy-tab">
+            <% if (easyProblems.length === 0) { %>
+                <div class="text-center empty-state">
+                    <i class="bi bi-robot me-2"></i> No **Easy** problems available yet. System is generating new challenges.
+                </div>
+            <% } else { %>
+                <div class="list-group shadow-sm">
+                    <% easyProblems.forEach(p => { %>
+                        <a href="/coding/<%= p.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><%= p.title %></span>
+                            <span class="badge badge-easy rounded-pill"><%= p.subject %></span>
+                        </a>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="tab-pane fade" id="medium" role="tabpanel" aria-labelledby="medium-tab">
+            <% if (mediumProblems.length === 0) { %>
+                <div class="text-center empty-state">
+                    <i class="bi bi-robot me-2"></i> No **Medium** problems available yet. System is generating new challenges.
+                </div>
+            <% } else { %>
+                <div class="list-group shadow-sm">
+                    <% mediumProblems.forEach(p => { %>
+                        <a href="/coding/<%= p.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><%= p.title %></span>
+                            <span class="badge badge-medium rounded-pill"><%= p.subject %></span>
+                        </a>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="tab-pane fade" id="hard" role="tabpanel" aria-labelledby="hard-tab">
+            <% if (hardProblems.length === 0) { %>
+                <div class="text-center empty-state">
+                    <i class="bi bi-robot me-2"></i> No **Hard** problems available yet. System is generating new challenges.
+                </div>
+            <% } else { %>
+                <div class="list-group shadow-sm">
+                    <% hardProblems.forEach(p => { %>
+                        <a href="/coding/<%= p.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><%= p.title %></span>
+                            <span class="badge badge-hard rounded-pill"><%= p.subject %></span>
+                        </a>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>

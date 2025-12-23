@@ -1,0 +1,90 @@
+<%- include('../partials/navbar') %>
+
+<!-- Coding Challenge Layout -->
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-[80vh]">
+
+    <!-- Challenge Details -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 overflow-auto">
+      <h2 class="text-2xl font-bold mb-4 text-indigo-600"><%= challenge.title %></h2>
+      <p class="text-gray-700 whitespace-pre-line"><%= challenge.description %></p>
+
+      <div class="mt-4">
+        <h3 class="font-semibold text-lg text-gray-800 mb-2">Example Input:</h3>
+        <pre class="bg-gray-100 p-3 rounded text-sm"><%= challenge.inputExample %></pre>
+
+        <h3 class="font-semibold text-lg text-gray-800 mt-4 mb-2">Expected Output:</h3>
+        <pre class="bg-gray-100 p-3 rounded text-sm"><%= challenge.expectedOutput %></pre>
+      </div>
+    </div>
+
+    <!-- Code Editor Section -->
+    <div class="bg-white rounded-2xl shadow-lg p-4 flex flex-col">
+      <h3 class="text-xl font-semibold text-indigo-600 mb-3">Write Your Code</h3>
+
+      <!-- User Code Editor -->
+      <textarea 
+        id="codeEditor" 
+        class="flex-grow p-3 font-mono text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        placeholder="Write your JavaScript code here..."
+      ></textarea>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end space-x-3 mt-4">
+        <button id="runBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Run</button>
+        <button id="submitBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">Submit</button>
+      </div>
+
+      <!-- Output Display -->
+      <div id="outputSection" class="mt-4 bg-gray-50 border rounded-lg p-3 font-mono text-sm text-gray-800 hidden"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Get UI elements
+  const runBtn = document.getElementById('runBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const codeEditor = document.getElementById('codeEditor');
+  const outputSection = document.getElementById('outputSection');
+
+  // Expected output for validation
+  const expectedOutput = `<%= challenge.expectedOutput.trim() %>`;
+
+  // Handle Run Code
+  runBtn.addEventListener('click', () => {
+    const userCode = codeEditor.value;
+    try {
+      const result = eval(userCode);
+      outputSection.classList.remove('hidden');
+      outputSection.style.borderColor = '#60a5fa';
+      outputSection.textContent = "Output: " + result;
+    } catch (err) {
+      outputSection.classList.remove('hidden');
+      outputSection.style.borderColor = '#ef4444';
+      outputSection.textContent = "Error: " + err.message;
+    }
+  });
+
+  // Handle Submit Code (validate output)
+  submitBtn.addEventListener('click', () => {
+    const userCode = codeEditor.value;
+    try {
+      const result = eval(userCode);
+      outputSection.classList.remove('hidden');
+
+      if (String(result).trim() === expectedOutput) {
+        outputSection.style.borderColor = '#22c55e';
+        outputSection.textContent = "Correct Output! Well done!";
+      } else {
+        outputSection.style.borderColor = '#ef4444';
+        outputSection.textContent = `Incorrect Output. Expected: ${expectedOutput}, Got: ${result}`;
+      }
+    } catch (err) {
+      outputSection.classList.remove('hidden');
+      outputSection.style.borderColor = '#ef4444';
+      outputSection.textContent = "Error: " + err.message;
+    }
+  });
+</script>

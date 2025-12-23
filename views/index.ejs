@@ -1,0 +1,116 @@
+<% title = "Home - Path2Tech" %>
+
+<style>
+  /* Define variables locally for clarity, though they should be in layout.ejs */
+  :root {
+      --primary-charcoal: #2D3A47;
+      --primary-dark: #1F2733; 
+      --accent-neon: #00FFD1; 
+      --success-color: #A3FF00; 
+      --danger-color: #FF6B6B;
+      --text-color: #E5E7EB;
+      --text-dark: #1F2937;
+      --background-light: #F4F7F9;
+  }
+  
+  /* Custom Styles for Home Page Elements */
+  .welcome-card {
+      background: linear-gradient(135deg, var(--primary-charcoal), var(--primary-dark));
+      color: var(--text-color);
+      border: 2px solid var(--accent-neon);
+      padding: 3rem !important;
+      border-radius: 20px !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .module-card {
+      border-radius: 12px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid rgba(0, 0, 0, 0.05); /* Soft border */
+  }
+  
+  .module-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Custom Neon/Lime Colors for Subject Icons */
+  .text-neon { color: var(--accent-neon) !important; }
+  .text-lime { color: var(--success-color) !important; }
+  .text-danger-neon { color: var(--danger-color) !important; }
+</style>
+
+<div class="my-5 welcome-card text-center">
+  <h1 class="fw-bolder mb-3" style="font-size: 2.5rem; color: var(--accent-neon);">
+      Welcome to Path2Tech: Prep.Track.Succeed
+  </h1>
+  <h2 class="fw-bold mb-4" style="color: var(--text-color);">Why Path2Tech?</h2>
+  <p class="lead opacity-75">
+    Path2Tech helps you master concepts through interactive MCQs, track your progress,
+    and improve your coding and system knowledge effectively. Learn at your pace,
+    with Easy, Medium, and Hard difficulty levels for each subject.
+  </p>
+</div>
+
+<h3 class="fw-bold mb-4" style="color: var(--primary-charcoal);"><i class="bi bi-book-half me-2"></i> Practice Modules</h3>
+<div class="row g-4 my-4">
+  <% const subjects = [
+      { name: "Java", icon: "bi-code-slash", color: "text-neon" },
+      { name: "Cloud Computing", icon: "bi-cloud", color: "text-lime" },
+      { name: "System Design", icon: "bi-diagram-3", color: "text-danger-neon" }
+    ];
+    const difficulties = ["Easy", "Medium", "Hard"];
+  %>
+
+  <% subjects.forEach(sub => { %>
+    <div class="col-md-4">
+      <div class="card module-card shadow border-0 h-100 p-3">
+        <div class="card-body text-center">
+          <i class="bi <%= sub.icon %> fs-1 <%= sub.color %> mb-3"></i>
+          <h5 class="card-title fw-bold" style="color: var(--primary-charcoal);"><%= sub.name %></h5>
+          <p class="card-text text-muted">
+            Solve <%= sub.name %> MCQs across all difficulty levels.
+          </p>
+          <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+            <% difficulties.forEach(diff => { %>
+              <a href="/modules/<%= sub.name %>/MCQ/<%= diff %>" 
+                 class="btn btn-primary px-3 fw-semibold btn-sm">
+                <%= diff %>
+              </a>
+            <% }) %>
+            <!-- Notes Button styled same as Easy/Medium/Hard -->
+            <a href="/modules/<%= sub.name %>/Notes/Easy" 
+               class="btn btn-primary px-3 fw-semibold btn-sm">
+              Notes
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<div class="text-center my-5">
+  <p class="lead fw-semibold" style="color: var(--primary-charcoal);">
+    Your personalized platform for mastering concepts with interactive practice.
+  </p>
+  <a href="/progress" 
+     class="btn px-4 py-2 mt-3 fw-bold" 
+     style="background-color: var(--accent-neon); border-color: var(--accent-neon); color: var(--text-dark); box-shadow: 0 5px 15px rgba(0, 255, 209, 0.4);">
+    <i class="bi bi-speedometer2 me-2"></i> View Your Progress
+  </a>
+</div>
+
+<div class="my-5 p-5 text-center module-card shadow-lg" 
+     style="background-color: var(--primary-dark); color: var(--text-color);">
+  <h2 class="fw-bold mb-3" style="color: var(--success-color);">
+      <i class="bi bi-terminal-box me-2"></i> Enhance Your Coding Skills
+  </h2>
+  <p class="lead opacity-75">
+    Practice hands-on Java coding problems. Write, run, and test your code — just like real interviews!
+  </p>
+  <a href="/coding" 
+     class="btn btn-success px-4 py-2 mt-3 fw-bold">
+    <i class="bi bi-code-slash me-2"></i> Start Coding Practice
+  </a>
+</div>

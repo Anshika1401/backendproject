@@ -1,0 +1,101 @@
+<% title = "Admin - Add New Question" %>
+
+<style>
+    :root {
+        --primary-charcoal: #161b22;   /* Darker background */
+        --primary-dark: #1c222a;       /* Card background */
+        --accent-neon: #00c8b0;        /* Softer neon */
+        --success-color: #a3ff00;      /* Soft lime green for Add button */
+        --text-color: #d0d4da; 
+        --text-dark: #000000;
+        --text-muted-dark: #7b8a99;
+    }
+    
+    .form-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 40px;
+        background-color: var(--primary-dark);
+        border: 1px solid #11171e;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-header {
+        color: var(--accent-neon);
+        text-shadow: 0 0 8px rgba(0, 200, 176, 0.4);
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    /* Custom Form Control Styling */
+    .form-control {
+        background-color: var(--primary-charcoal);
+        border: 1px solid #11171e;
+        color: var(--text-color);
+        border-radius: 4px;
+        padding: 10px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted-dark);
+        opacity: 0.7;
+    }
+
+    /* Neon Focus Effect */
+    .form-control:focus {
+        background-color: var(--primary-charcoal);
+        color: var(--text-color);
+        border-color: var(--accent-neon);
+        box-shadow: 0 0 8px rgba(0, 200, 176, 0.6);
+        outline: none;
+    }
+    
+    /* ADD QUESTION BUTTON (Soft Neon) */
+    .btn-submit-neon {
+        background-color: var(--success-color);
+        border: 2px solid var(--success-color);
+        color: var(--text-dark);
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 6px;
+        transition: all 0.3s;
+        box-shadow: 0 0 15px rgba(163, 255, 0, 0.5);
+        text-transform: uppercase;
+    }
+    .btn-submit-neon:hover {
+        box-shadow: 0 0 20px var(--success-color);
+        transform: translateY(-2px);
+    }
+
+    /* Container tweaks */
+    .container {
+        padding-bottom: 50px;
+    }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <h2 class="form-header"><i class="bi bi-file-earmark-plus me-2"></i> Deploy New Question</h2>
+        
+        <form action="/admin/add" method="POST">
+            <input class="form-control mb-3" name="subject" placeholder="Subject (e.g., Cloud Computing)" required>
+            <input class="form-control mb-3" name="type" placeholder="Type (e.g., MCQ, Code)" required>
+            <input class="form-control mb-3" name="difficulty" placeholder="Difficulty (Easy, Medium, Hard)" required>
+            
+            <textarea class="form-control mb-3" name="question" placeholder="Question Text" rows="3" required></textarea>
+            
+            <input class="form-control mb-3" name="options" placeholder="Options (comma separated, e.g., A, B, C, D)" required>
+            <input class="form-control mb-3" name="correct_answer" placeholder="Correct Answer (Must match an option)" required>
+            
+            <textarea class="form-control mb-4" name="explanation" placeholder="Detailed Explanation (Optional)" rows="2"></textarea>
+            
+            <button class="btn btn-submit-neon">
+                <i class="bi bi-upload me-2"></i> Add Question
+            </button>
+        </form>
+    </div>
+</div>

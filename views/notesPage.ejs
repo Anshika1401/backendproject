@@ -1,0 +1,270 @@
+<div class="notes-page">
+  <h2 class="notes-title">
+    <%= subject %> — Theory
+  </h2>
+
+  <!-- Search Box -->
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Search notes...">
+    <button id="search-btn" onclick="searchNotes()">Search</button>
+  </div>
+
+  <!-- Notes Container for PDF -->
+  <div id="notes-pdf">
+
+    <!-- Only notes content for PDF -->
+    <div id="notes-only">
+      <% if (notes.length === 0) { %>
+        <p class="no-notes">No theory notes available for this subject.</p>
+      <% } %>
+
+      <% notes.forEach(note => { %>
+        <div class="notes-card" data-title="<%= note.title.toLowerCase() %>">
+          <h3 class="note-title"><%= note.title %></h3>
+
+          <% const content = JSON.parse(note.content); %>
+
+          <div class="notes-content">
+            <p><strong>Overview:</strong> <span class="note-text"><%= content.overview %></span></p>
+
+            <% if (content.concepts && content.concepts.length > 0) { %>
+              <p><strong>Concepts:</strong></p>
+              <ul>
+                <% content.concepts.forEach(c => { %>
+                  <li class="note-text"><%= c %></li>
+                <% }) %>
+              </ul>
+            <% } %>
+
+            <% if (content.example) { %>
+              <p><strong>Example:</strong></p>
+              <pre class="note-text"><%= content.example %></pre>
+            <% } %>
+
+            <% if (content.tips && content.tips.length > 0) { %>
+              <p><strong>Tips:</strong></p>
+              <ul>
+                <% content.tips.forEach(t => { %>
+                  <li class="note-text"><%= t %></li>
+                <% }) %>
+              </ul>
+            <% } %>
+
+            <% if (content.references && content.references.length > 0) { %>
+              <p class="references"><strong>References:</strong>
+                <% content.references.forEach(r => { %>
+                  <br>• <a href="<%= r %>" target="_blank"><%= r %></a>
+                <% }) %>
+              </p>
+            <% } %>
+
+            <p class="note-date">
+              Added on: <%= note.created_at.toDateString() %>
+            </p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Download Button -->
+    <button id="download-btn" onclick="downloadPDF()">Download Notes as PDF</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadPDF() {
+  // Only capture #notes-only (exclude search bar and button)
+  const element = document.getElementById("notes-only");
+
+  const opt = {
+    margin: 0.5,
+    filename: "Notes.pdf",
+    image: { type: 'jpeg', quality: 0.98 },
+  html2canvas: { 
+  scale: 2, 
+  logging: true, 
+  letterRendering: true, 
+  scrollY: 0,
+  useCORS: true,
+  backgroundColor: '#0D1117' // sets dark background in PDF
+},
+
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['css', 'legacy'] }
+  };
+
+  html2pdf().set(opt).from(element).save();
+}
+
+
+function searchNotes() {
+  const query = document.getElementById('search').value.trim().toLowerCase();
+  const notes = document.querySelectorAll('.notes-card');
+
+  if (!query) {
+    notes.forEach(note => {
+      note.style.display = '';
+      note.querySelectorAll('.note-text').forEach(el => {
+        el.innerHTML = el.textContent;
+      });
+    });
+    return;
+  }
+
+  notes.forEach(note => {
+    const title = note.getAttribute('data-title');
+    const textElems = note.querySelectorAll('.note-text');
+    let found = false;
+
+    textElems.forEach(el => {
+      const text = el.textContent;
+      const regex = new RegExp(`(${query})`, 'gi');
+
+      if (regex.test(text)) {
+        found = true;
+        el.innerHTML = text.replace(regex, '<span class="highlight">$1</span>');
+      } else {
+        el.innerHTML = text;
+      }
+    });
+
+    note.style.display = found || title.includes(query) ? '' : 'none';
+  });
+}
+</script>
+
+
+<!-- CSS -->
+<style>
+body {
+  background: #0D1117;
+  color: #E5E7EB;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.notes-page {
+  padding: 2rem;
+  min-height: 80vh;
+}
+
+.notes-title {
+  color: #FFFFFF;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(0, 255, 209, 0.5);
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.search-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.search-container input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #555;
+  background: #1E2632;
+  color: #E5E7EB;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-container input::placeholder { color: #888; }
+
+.search-container input:focus {
+  border: 1px solid #00FFD1;
+  box-shadow: 0 0 10px rgba(0, 255, 209, 0.4);
+  outline: none;
+}
+
+.search-container button {
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  background: #FF6B6B;
+  color: #FFFFFF;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-container button:hover {
+  background: #FF4C4C;
+  transform: scale(1.05);
+}
+
+.note-title { color: #FFD166; font-size: 1.4rem; margin-bottom: 10px; font-weight: 700; text-shadow: 0 0 5px rgba(255,209,0,0.4); }
+
+.notes-content p, .notes-content ul, .notes-content li {
+  color: #E5E7EB; line-height: 1.7; margin-bottom: 12px; font-size: 0.97rem;
+}
+
+.notes-content ul { padding-left: 22px; }
+
+.notes-content pre {
+  background: #1C232B; padding: 12px; border-radius: 6px; color: #A3FF00;
+  overflow-x: auto; font-size: 0.95rem; box-shadow: inset 0 0 8px rgba(0,255,209,0.1);
+}
+
+.references a { color: #00FFD1; text-decoration: none; font-weight: 500; }
+.references a:hover { text-decoration: underline; }
+
+.note-date { font-size: 13px; margin-top: 12px; color: #AAAAAA; font-style: italic; }
+
+.no-notes { text-align: center; font-style: italic; color: #999; margin-top: 2rem; font-size: 1rem; }
+#notes-pdf {
+  background: #0D1117;   /* dark background */
+  color: #E5E7EB;        /* default text color */
+  padding: 20px;
+}
+#notes-pdf a {
+  color: #00FFD1;        /* link color */
+  text-decoration: none;
+}
+#notes-pdf pre {
+  background: #1C232B;   /* pre block background */
+  color: #A3FF00;        /* code color */
+}
+#notes-only {
+  background-color: #0D1117; /* dark background */
+  color: #E5E7EB;            /* text color */
+  padding: 20px;
+}
+#notes-only a {
+  color: #00FFD1;             /* links */
+  text-decoration: none;
+}
+#notes-only pre {
+  background-color: #1C232B;  /* code blocks */
+  color: #A3FF00;
+}
+#notes-only, #notes-only * {
+  color: #E5E7EB !important;
+}
+
+
+#download-btn {
+  display: block; margin: 30px auto 0 auto; padding: 14px 28px;
+  background: #00FFD1; color: #0D1117; font-weight: bold;
+  border: none; border-radius: 10px; cursor: pointer; font-size: 1rem;
+  transition: all 0.2s ease;
+}
+#download-btn:hover { background: #00e0b8; transform: scale(1.05); }
+
+.highlight {
+  background-color: #FFDD57;
+  color: #000;
+  font-weight: 600;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+</style>

@@ -1,0 +1,204 @@
+<% title = subject + " - " + difficulty + " Results" %>
+
+<style>
+  :root {
+    --primary-dark: #12181F;
+    --card-dark: #1C232B;
+    --accent-color: #00FFD1; /* Highlight color for score */
+    --success-color: #A3FF00;
+    --danger-color: #FF0066;
+    --text-color: #E5E7EB; /* Default light text */
+    --text-muted: #A0A8B0; /* Muted text for descriptions */
+  }
+
+  body {
+    background-color: var(--primary-dark);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+  }
+
+  .container h1, .container h2, .container h3 {
+    color: var(--text-color);
+  }
+
+  /* Result Summary Card */
+  .card.result-summary {
+    background-color: var(--card-dark);
+    color: var(--text-color);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+  }
+
+  .result-summary h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .result-summary h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-summary strong {
+    color: var(--accent-color);
+    font-size: 3rem;
+  }
+
+  .result-summary p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* Detailed Review Header */
+  h3.fw-bold {
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+  }
+
+  /* Question Review Cards */
+  .card.question-review {
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--card-dark);
+    color: var(--text-color);
+    border-left-width: 6px;
+    border-left-style: solid;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .question-review.correct {
+    border-left-color: var(--success-color);
+  }
+
+  .question-review.incorrect {
+    border-left-color: var(--danger-color);
+  }
+
+  .question-review h5 {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .question-review p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .question-review .text-success {
+    color: var(--success-color) !important;
+    font-weight: 700;
+  }
+
+  .question-review .text-danger {
+    color: var(--danger-color) !important;
+    font-weight: 700;
+  }
+
+  .alert-info {
+    background-color: #22303a;
+    border-left: 5px solid var(--accent-color);
+    color: var(--text-color);
+  }
+
+  /* Action Buttons */
+  .btn {
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #12181F;
+  }
+
+  .btn-primary:hover {
+    background-color: #00e0c5;
+    border-color: #00e0c5;
+    color: #12181F;
+  }
+
+  .btn-warning {
+    background-color: #FFC107;
+    border-color: #FFC107;
+    color: #12181F;
+  }
+
+  .btn-warning:hover {
+    background-color: #e6b800;
+    border-color: #e6b800;
+    color: #12181F;
+  }
+</style>
+
+<div class="container my-5">
+
+  <!-- Result Summary Card -->
+  <div class="card result-summary">
+    <h1>
+      <% if (percentage >= 80) { %>
+        🎉 EXCELLENT WORK!
+      <% } else if (percentage >= 50) { %>
+        👍 GREAT EFFORT!
+      <% } else { %>
+        💡 TIME TO REVIEW!
+      <% } %>
+    </h1>
+
+    <h2>
+      Your Final Score:
+      <strong><%= score %> / <%= total %></strong> (<%= percentage %>%)
+    </h2>
+
+    <p>⏱ Attempt saved locally for quick dashboard access</p>
+  </div>
+
+  <!-- Section Header -->
+  <h3 class="fw-bold">Detailed Review</h3>
+
+  <!-- Question Review -->
+  <% feedback.forEach((q, i) => { %>
+    <div class="card question-review <%= q.isCorrect ? 'correct' : 'incorrect' %>">
+      <h5>
+        <i class="bi <%= q.isCorrect ? 'bi-check-circle-fill text-success' : 'bi-x-octagon-fill text-danger' %> me-2 fs-4"></i>
+        Q<%= i + 1 %>. <%= q.question %>
+      </h5>
+
+      <p>Your Answer: <strong class="<%= q.isCorrect ? 'text-success' : 'text-danger' %>"><%= q.userAnswer %></strong></p>
+
+      <% if (!q.isCorrect) { %>
+        <p>Correct Answer: <strong class="text-success"><%= q.correctAnswer %></strong></p>
+        <p class="small text-danger"><i class="bi bi-lightbulb-fill me-1"></i> Review this concept again.</p>
+      <% } else { %>
+        <p class="small text-success"><i class="bi bi-star-fill me-1"></i> Concept mastered ✔</p>
+      <% } %>
+
+      <% if (q.explanation) { %>
+        <div class="alert alert-info mt-3">
+          <strong><i class="bi bi-info-circle-fill me-1"></i> Explanation:</strong>
+          <%= q.explanation %>
+        </div>
+      <% } %>
+    </div>
+  <% }) %>
+
+  <!-- Actions -->
+  <div class="text-center mt-5">
+    <a href="/modules/<%= subject %>/<%= type %>/<%= difficulty %>" class="btn btn-primary me-3">
+      <i class="bi bi-arrow-clockwise me-2"></i> Try Again
+    </a>
+    <a href="/progress" class="btn btn-warning">
+      <i class="bi bi-speedometer me-2"></i> View Dashboard
+    </a>
+  </div>
+
+</div>

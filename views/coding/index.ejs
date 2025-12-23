@@ -1,0 +1,23 @@
+<%- include('../partials/navbar') %>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary fw-bold">💻 Coding Challenges</h2>
+
+  <% if (questions.length === 0) { %>
+    <p class="text-center text-muted">No challenges available yet.</p>
+  <% } else { %>
+    <div class="row">
+      <% questions.forEach(q => { %>
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+              <h5 class="card-title fw-bold"><%= q.title %></h5>
+              <p class="text-muted small mb-3"><%= q.description.slice(0, 80) %>...</p>
+              <a href="/coding/<%= q.id %>" class="btn btn-outline-primary w-100">Solve Challenge</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
